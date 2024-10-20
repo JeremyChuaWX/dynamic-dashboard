@@ -1,1 +1,3 @@
-artifacts
+artifacts/
+pg_data/
+.env
