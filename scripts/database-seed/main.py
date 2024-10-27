@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 from sqlalchemy import create_engine, inspect
+from datetime import datetime
 
 DATABASE_URL = os.environ["DATABASE_URL"]
 ARTIFACTS_PATH = os.environ["ARTIFACTS_PATH"]
@@ -13,6 +14,7 @@ CSV_TO_TABLE = {
     "vitals.csv": "vitals",
     "ward_vitals.csv": "ward_vitals",
 }
+BASE_DATETIME = datetime(2020, 1, 1)
 
 engine = create_engine(DATABASE_URL)
 inspector = inspect(engine)
@@ -32,7 +34,9 @@ def process_file(filename: str, table_name: str):
                 col for col in chunk.columns if "time" in col or "date" in col
             ]
             for col in date_columns:
-                chunk[col] = pd.to_datetime(chunk[col], errors="coerce")
+                chunk[col] = BASE_DATETIME + pd.to_timedelta(
+                    chunk[col].mask(chunk[col].isna()), unit="m"
+                )
             chunk.to_sql(table_name, engine, if_exists="append", index=False)
         print(f"successfully processed {filename}, inserted data into {table_name}")
     except Exception as e:
