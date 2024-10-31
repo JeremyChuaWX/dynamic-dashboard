@@ -15,3 +15,8 @@ seed:
 	docker compose wait database.seed
 	docker compose down --remove-orphans --volumes
 	docker image prune -f
+
+.PHONY: stop
+stop:
+	docker compose down --remove-orphans --volumes
+	docker image prune -f
