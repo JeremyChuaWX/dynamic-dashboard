@@ -1,0 +1,7 @@
+chromadb
+dash
+dash_draggable
+ollama
+pandas
+plotly
+vanna[chromadb,ollama,postgres]
