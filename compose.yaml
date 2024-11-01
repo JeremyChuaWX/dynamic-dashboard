@@ -1,12 +1,51 @@
 services:
-  database:
+  app:
+    build: ./app
+    depends_on:
+      chroma:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    environment:
+      PORT: $PORT
+      POSTGRES_HOST: $POSTGRES_HOST
+      POSTGRES_DB: $POSTGRES_DB
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      POSTGRES_PORT: $POSTGRES_PORT
+      OLLAMA_ADDRESS: $OLLAMA_ADDRESS
+      OLLAMA_MODEL: $OLLAMA_MODEL
+      CHROMA_HOST: $CHROMA_HOST
+      ASSETS_PATH: $ASSETS_PATH
+    ports:
+      - "$PORT:$PORT"
+    volumes:
+      - $ASSETS_PATH:/app/assets
+      - $CACHE_PATH:/root/.cache/chroma/onnx_models
+
+  chroma:
+    environment:
+      - IS_PERSISTENT=TRUE
+      - ANONYMIZED_TELEMETRY=TRUE
+    healthcheck:
+      test: [ "CMD", "/bin/bash", "-c", "cat < /dev/null > /dev/tcp/localhost/8000" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    image: chromadb/chroma
+    ports:
+      - "8000:8000"
+    volumes:
+      - $CHROMA_PATH:/chroma/chroma
+
+  postgres:
     command: ["postgres", "-c", "log_statement=all"]
     environment:
       POSTGRES_USER: $POSTGRES_USER
       POSTGRES_PASSWORD: $POSTGRES_PASSWORD
       POSTGRES_DB: $POSTGRES_DB
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -d $DATABASE_URL"]
+      test: ["CMD-SHELL", "pg_isready -d $POSTGRES_URL"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -14,24 +53,24 @@ services:
     ports:
       - "$POSTGRES_PORT:5432"
     volumes:
-      - $DATABASE_PATH:/var/lib/postgresql/data
+      - $POSTGRES_PATH:/var/lib/postgresql/data
 
-  database.migrate:
-    command: ["-path", "/migrations", "-database", "$DATABASE_URL", "up"]
+  postgres.migrate:
+    command: ["-path", "/migrations", "-database", "$POSTGRES_URL", "up"]
     depends_on:
-      database:
+      postgres:
         condition: service_healthy
     image: migrate/migrate
     volumes:
       - $MIGRATIONS_PATH:/migrations
 
-  database.seed:
+  postgres.seed:
     build: $SCRIPTS_PATH/database-seed
     depends_on:
-      database:
+      postgres:
         condition: service_healthy
     environment:
       ARTIFACTS_PATH: $ARTIFACTS_PATH
-      DATABASE_URL: $DATABASE_URL
+      POSTGRES_URL: $POSTGRES_URL
     volumes:
       - $ARTIFACTS_PATH:/app/artifacts

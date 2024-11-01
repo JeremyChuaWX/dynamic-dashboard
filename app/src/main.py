@@ -1,10 +1,12 @@
-from vanna import Vanna
+from llm import Vanna
+from database import Database
 from app import App
 
 
 def main():
-    vn = Vanna()
-    app = App(vn)
+    db = Database()
+    vn = Vanna(db)
+    app = App(vn, db)
     app.start()
 
 

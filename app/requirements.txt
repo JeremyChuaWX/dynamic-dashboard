@@ -4,4 +4,6 @@ dash_draggable
 ollama
 pandas
 plotly
+psycopg2
+sqlalchemy
 vanna[chromadb,ollama,postgres]

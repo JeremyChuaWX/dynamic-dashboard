@@ -1,3 +1,5 @@
 artifacts/
+cache/
+chroma_data/
 pg_data/
 .env

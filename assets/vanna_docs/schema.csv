@@ -1,0 +1,48 @@
+﻿Table,Variable,Type,Description
+operations,op_id,Number,A random number starts with 4 for the operation.
+,subject_id,Number,A random number starts with 1 for the patient.
+,hadm_id,Number,A random number starts with 2 for hospital admission.
+,case_id,Number,A linker to VitalDB Open Dataset
+,opdate,Relative Time,Operation date
+,age,Number,Age of the patient on the operation date
+,sex,M/F,Sex of the patient
+,weight,Number,Weight measured before operation
+,height,Number,Age measured before operation
+,asa,1/2/3/4/5,American Society of Anesthesiologists physical status classification
+,emop,Binary,Emergency of the operation
+,department,String,Surgical department for admission
+,antype,String,Anesthesia Type (General / Neuraxial / Regional / MAC)
+,icd10_pcs,String,ICD-10 Procedure Coding System code
+,orin_time,Relative Time,The time for entering the operating room
+,orout_time,Relative Time,The time for leaving the operating room
+,opstart_time,Relative Time,The time for starting the operation
+,opend_time,Relative Time,The time for finishing the operation
+,admission_time,Relative Time,The time for hospital admission
+,discharge_time,Relative Time,The time for hospital discharge
+,anstart_time,Relative Time,The time for starting anaesthesia
+,anend_time,Relative Time,The time for finishing anaesthesia
+,cpbon_time,Relative Time,The time for starting cardiopulmonary bypass
+,cpboff_time,Relative Time,The time for finishing cardiopulmonary bypass
+,icuin_time,Relative Time,The time for ICU admission after surgery
+,icuout_time,Relative Time,The time for ICU discharge after surgery
+,inhosp_death_time,Relative Time,The time for in-hospital death
+diagnosis,subject_id,Number,The patient identifier defined in the operations table
+,chart_time,Relative Time,The time for the diagnosis recorded
+,icd10_cm,String,ICD-10 Diagnosis Code
+vitals,subject_id,Number,The patient identifier defined in the operations table
+,chart_time,Relative Time,The time for the measurement recorded
+,item_name,String,Label for the measurement
+,value,Number,Measured value
+,op_id,Number,Operation identifier defined in the operations table
+ward_vitals,subject_id,Number,The patient identifier defined in the operations table
+,chart_time,Relative Time,The time for the measurement recorded
+,item_name,String,Label for the measurement
+,value,Number,Measured value
+labs,subject_id,Number,The patient identifier defined in the operations table
+,chart_time,Relative Time,The time for the measurement recorded
+,item_name,String,Label for the measurement
+,value,Number,Measured value
+medications,subject_id,Number,The patient identifier defined in the operations table
+,chart_time,Relative Time,The time for the measurement recorded
+,drug_name,String,Name of the medication
+,route,String,Route for the medication (po/iv/ex)

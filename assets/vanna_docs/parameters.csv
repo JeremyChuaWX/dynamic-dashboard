@@ -1,0 +1,127 @@
+﻿Table,Label,Unit,Description
+labs,albumin,g/dL,Albumin
+labs,alp,IU/L,Alkaline phosphatase
+labs,alt,IU/L,Alanine transaminase
+labs,aptt,sec,Activated partial thromboplastin time
+labs,ast,IU/L,Aspartate transaminase
+labs,be,mmol/L,Base excess in arterial blood gas analysis
+labs,bun,mg/dL,Blood urea nitrogen
+labs,calcium,mg/dL,Calcium
+labs,chloride,mmol/L,Chloride
+labs,ck,IU/L,Creatine kinase
+labs,ckmb,ug/L,Creatine kinase-MB
+labs,creatinine,mg/dL,Creatinine
+labs,crp,mg/dL,High-sensitive CRP
+labs,d_dimer,mg/L,"D-dimer (fibrinogen equivalent units, FEU)"
+labs,fibrinogen,mg/dL,Fibrinogen
+labs,glucose,mg/dL,Glucose
+labs,hb,g/dL,Hemoglobin
+labs,hba1c,%,Hemoglobin A1c
+labs,hco3,mmol/L,HCO3 in arterial blood gas analysis
+labs,hct,%,Hematocrit
+labs,ica,mmol/L,Ionized calcium
+labs,lacate,mmol/L,Lactate
+labs,lymphocyte,%,Lymphocyte percentage
+labs,paco2,mmHg,Partial pressure of carbon dioxide in arterial blood gas analysis
+labs,pao2,mmHg,Partial pressure of oxygen in arterial blood gas analysis
+labs,ph,,pH in arterial blood gas analysis
+labs,phosphorus,mg/dL,Phosphorus
+labs,platelet,/nL,Platelet count
+labs,potassium,mmol/L,Potassium
+labs,ptinr,INR,Prothrombin time
+labs,sao2,%,Oxygen saturation in arterial blood gas analysis
+labs,seg,%,Segmented neutrophil percentage
+labs,sodium,mmol/L,Sodium
+labs,total_bilirubin,mg/dL,Total bilirubin
+labs,total_protein,g/dL,Total protein
+labs,troponin_i,ug/L,Troponin-I
+labs,troponin_t,ug/L,Troponin-T
+labs,wbc,/nL,White blood cell count
+vitals,aft,ug,Infused dose of alfentanil
+vitals,air,L/min,Flow of medical air
+vitals,alb20,mL,Infused volume of albumin 20%
+vitals,alb5,mL,Infused volume of albumin 5%
+vitals,art_dbp,mmHg,Arterial diastolic blood pressure
+vitals,art_mbp,mmHg,Arterial mean blood pressure
+vitals,art_sbp,mmHg,Arterial systolic blood pressure
+vitals,bis,,Bispectral index
+vitals,bt,Celsius,Body temperature
+vitals,cbro2,%,cerebral regional oxygen saturation
+vitals,ci,L/min/m2,Cardiac Index
+vitals,cryo,Unit,Transfused cryoprecipitate
+vitals,cvp,mmHg,Central venous pressure
+vitals,d10w,mL,Infused volume of Dextrose 10% water
+vitals,d50w,mL,Infused volume of Dextrose 50% water
+vitals,d5w,mL,Infused volume of Dextrose 5% water
+vitals,dobui,ug/kg/min,Rate of dobutamine continuous infusion
+vitals,dopai,ug/kg/min,Rate of dopamine continuous infusion
+vitals,ebl,mL,Estimated blood loss
+vitals,eph,mg,Injected dose of Ephedrine
+vitals,epi,ug,Injected dose of Epinephrine
+vitals,epii,ug/kg/min,Rate of epinephrine continuous infusion
+vitals,etco2,mmHg,End tidal concentration of carbon dioxide
+vitals,etdes,%,End tidal concentration of desflurane
+vitals,etgas,%,End tidal concentration of anesthetic agent
+vitals,etiso,%,End tidal concentration of isoflurane
+vitals,etsevo,%,End tidal concentration of sevoflurane
+vitals,ffp,Unit,Transfused fresh frozen plasma
+vitals,fio2,%,Fraction of inspired oxygen
+vitals,ftn,ug,Injected dose of fentanyl
+vitals,hes,mL,Infused volume of Hydroxyethyl-starch solution
+vitals,hns,mL,Infused volume of half normal saline
+vitals,hr,/min,Heart rate
+vitals,hs,mL,Infused volume of Hartmann's solution
+vitals,mdz,mg,Injected dose of midazolam
+vitals,minvol,L/min,Minute ventilation
+vitals,mlni,ug/kg/min,Rate of milrinone continuous infusion
+vitals,n2o,L/min,Flow of nitrous oxide
+vitals,nepi,ug/kg/min,Rate of norepinephrine continuous infusion
+vitals,nibp_dbp,mmHg,Non-invasive diastolic blood pressure
+vitals,nibp_mbp,mmHg,Non-invasive mean blood pressure
+vitals,nibp_sbp,mmHg,Non-invasive systolic blood pressure
+vitals,ns,mL,Infused volume of normal saline
+vitals,ntgi,ug/kg/min,Rate of nitroglycerin continuous infusion
+vitals,o2,L/min,Flow of oxygen
+vitals,pap_dbp,mmHg,Pulmonary artery diastolic blood pressure
+vitals,pap_mbp,mmHg,Pulmonary artery mean blood pressure
+vitals,pap_sbp,mmHg,Pulmonary artery systolic blood pressure
+vitals,pc,Unit,Transfused platelet concentrate
+vitals,peep,cmH2O,Positive end expiratory pressure
+vitals,pepi,ug/h,Rate of phenylephrine continuous infusion
+vitals,phe,ug,Injected dose of phenyephrine
+vitals,pheresis,Unit,Transfused platelet pheresis
+vitals,pip,cmH2O,Peak inspiratory pressure
+vitals,pmean,cmH2O,Mean airway pressure
+vitals,ppf,mg,Injected dose of propofol
+vitals,ppfi,ug/mL,Target concentration of propofol
+vitals,pplat,cmH2O,Plateau pressure
+vitals,psa,mL,Infused volume of plasma solution
+vitals,rbc,Unit,Transfused red blood cell
+vitals,rfti,ng/mL,Target concentration of remifentanil
+vitals,rr,/min,Respiration rate
+vitals,sft,ug,Injected dose of sufentanil
+vitals,spo2,%,Peripheral oxygen saturation
+vitals,sti,mV,ST segment elevation in lead I
+vitals,stii,mV,ST segment elevation in lead II
+vitals,stiii,mV,ST segment elevation in lead III
+vitals,stv5,mV,ST segment elevation in lead V5
+vitals,svi,mL/m2,Stroke volume index
+vitals,uo,mL,Urine output
+vitals,vaso,Unit,Injected dose of vasopressin
+vitals,vt,mL,Tidal volume
+ward_vitals,bt,Celsius,Body Temperature
+ward_vitals,crrt,0/1,Use of hemodialysis or continuous renal replacement therapy
+ward_vitals,ecmo,0/1,Use of extracorporeal membrane oxygenator
+ward_vitals,fio2,%,Fraction inspired oxygen
+ward_vitals,gcs_e,01월 04일,Glasgow Coma Scale (Eye)
+ward_vitals,gcs_m,01월 06일,Glasgow Coma Scale (Motor)
+ward_vitals,gcs_v,01월 05일,Glasgow Coma Scale (Verbal)
+ward_vitals,hr,/min,Heart rate
+ward_vitals,iabp,0/1,Existence of any parameter related to use of Intra-aortic baloon pump
+ward_vitals,nibp_dbp,mmHg,Non-invasive diastolic blood pressure
+ward_vitals,nibp_mbp,mmHg,Non-invasive mean blood pressure
+ward_vitals,nibp_sbp,mmHg,Non-invasive systolic blood pressure
+ward_vitals,rr,/min,Respiration rate
+ward_vitals,spo2,%,Peripheral oxygen saturation
+ward_vitals,uo,mL,Urine output
+ward_vitals,vent,0/1,Use of mechanical ventilation

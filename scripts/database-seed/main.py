@@ -3,7 +3,7 @@ import pandas as pd
 from sqlalchemy import create_engine, inspect
 from datetime import datetime
 
-DATABASE_URL = os.environ["DATABASE_URL"]
+POSTGRES_URL = os.environ["POSTGRES_URL"]
 ARTIFACTS_PATH = os.environ["ARTIFACTS_PATH"]
 CHUNK_SIZE = 1000
 CSV_TO_TABLE = {
@@ -16,7 +16,7 @@ CSV_TO_TABLE = {
 }
 BASE_DATETIME = datetime(2020, 1, 1)
 
-engine = create_engine(DATABASE_URL)
+engine = create_engine(POSTGRES_URL)
 inspector = inspect(engine)
 
 
