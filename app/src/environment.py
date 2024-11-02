@@ -13,6 +13,8 @@ class Environment:
     POSTGRES_ADDRESS = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}/{POSTGRES_DB}"
     OLLAMA_ADDRESS = os.environ["OLLAMA_ADDRESS"]
     OLLAMA_MODEL = os.environ["OLLAMA_MODEL"]
+    OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
+    OPENAI_MODEL = os.environ["OPENAI_MODEL"]
     CHROMA_HOST = os.environ["CHROMA_HOST"]
     ASSETS_PATH = os.environ["ASSETS_PATH"]
     VANNA_DDL_PATH = os.path.join(ASSETS_PATH, "vanna_ddl")

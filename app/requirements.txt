@@ -6,4 +6,4 @@ pandas
 plotly
 psycopg2
 sqlalchemy
-vanna[chromadb,ollama,postgres]
+vanna[chromadb,ollama,openai,postgres]
