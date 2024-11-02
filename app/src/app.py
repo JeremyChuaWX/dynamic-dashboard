@@ -1,8 +1,8 @@
+import json
+
 import dash
 import dash_draggable
-import pandas as pd
-import plotly.express as px
-from dash import callback_context, dcc, html
+from dash import dcc, html
 from dash.dependencies import Input, Output, State
 
 from database import Database
@@ -22,6 +22,7 @@ class App:
         self.callbacks()
 
     def layout(self):
+        layout, children = self.load_dashboard()
         self.app.layout = html.Div(
             style={
                 "display": "flex",
@@ -45,18 +46,33 @@ class App:
                             id="text-input",
                             type="text",
                             placeholder="Enter your query...",
-                            style={"width": "100%", "marginBottom": "10px"},
+                            style={
+                                "width": "100%",
+                                "marginBottom": "10px",
+                            },
                         ),
                         html.Button(
-                            "Submit", id="submit-button", style={"width": "100%"}
+                            "Submit",
+                            id="submit-button",
+                            style={
+                                "width": "100%",
+                            },
+                        ),
+                        html.Button(
+                            "Save Layout",
+                            id="save-layout-button",
+                            style={
+                                "width": "100%",
+                                "marginTop": "10px",
+                            },
                         ),
                         html.Div(id="output-text", style={"marginTop": "20px"}),
                     ],
                 ),
-                dash_draggable.ResponsiveGridLayout(
+                dash_draggable.GridLayout(
                     id="draggable-area",
-                    layouts={"lg": []},
-                    children=[],
+                    layout=layout,
+                    children=children,
                     style={
                         "flex": "1",
                         "padding": "10px",
@@ -66,36 +82,93 @@ class App:
             ],
         )
 
+    def load_dashboard(self):
+        print("loading dashboard ...")
+        layout = []
+        children = []
+        layout_str = self.db.select_latest_layout()
+        if not layout_str:
+            return (layout, children)
+        saved_layout = json.loads(layout_str)
+        for id, pos in saved_layout.items():
+            layout.append(pos)
+            _, question, sql_query, plotly_code = self.db.select_one_visualisation(id)
+            df = self.vanna.run_sql(sql_query)
+            fig = self.vanna.get_plotly_figure(plotly_code, df)
+            chart = dcc.Graph(
+                id=id,
+                figure=fig,
+                style={
+                    "marginBottom": "20px",
+                },
+            )
+            children.append(
+                html.Div(
+                    chart,
+                    key=id,
+                    style={
+                        "backgroundColor": "#333",
+                        "padding": "10px",
+                    },
+                )
+            )
+        return (layout, children)
+
     def callbacks(self):
+        @self.app.callback(
+            Input("save-layout-button", "n_clicks"),
+            Input("draggable-area", "layout"),
+            State("draggable-area", "children"),
+        )
+        def save_layout(n_clicks, layout, children):
+            if not n_clicks:
+                return dash.no_update
+            map = {}
+            for position, child in zip(layout, children):
+                map[child["props"]["key"]] = position
+            layout_str = json.dumps(map)
+            self.db.insert_layout(layout_str)
+
         @self.app.callback(
             Output("draggable-area", "children"),
             Input("submit-button", "n_clicks"),
             State("text-input", "value"),
             State("draggable-area", "children"),
         )
-        def update_dashboard(n_clicks, query, current_children):
+        def add_visualisation(n_clicks, query, current_children):
             if not n_clicks or not query:
                 return current_children
-
             sql = self.vanna.generate_sql(query)
             df = self.vanna.run_sql(sql)
             code = self.vanna.generate_plotly_code(
                 query, sql, df_metadata=f"Running df.dtypes gives:\n {df.dtypes}"
             )
+            id = str(self.db.insert_visualisation(query, sql, code))
             fig = self.vanna.get_plotly_figure(code, df)
             chart = dcc.Graph(
-                id=f"chart-{n_clicks}",
+                id=id,
+                responsive=True,
                 figure=fig,
-                style={"marginBottom": "20px"},
+                style={
+                    "min-height": "0",
+                    "flex-grow": "1",
+                },
             )
             current_children.append(
                 html.Div(
                     chart,
-                    key=f"chart-{n_clicks}",
-                    style={"backgroundColor": "#333", "padding": "10px"},
+                    key=id,
+                    style={
+                        "height": "100%",
+                        "width": "100%",
+                        "display": "flex",
+                        "flex-direction": "column",
+                        "flex-grow": "0",
+                        "backgroundColor": "#333",
+                        "padding": "10px",
+                    },
                 )
             )
-
             return current_children
 
     def start(self):
