@@ -63,8 +63,9 @@ class App:
                 ),
                 dash_draggable.GridLayout(
                     id="draggable-area",
-                    layout=layout,
                     children=children,
+                    layout=layout,
+                    save=False,
                     style={
                         "flex": "1",
                         "padding": "10px",
@@ -75,7 +76,6 @@ class App:
         )
 
     def initialize_dashboard(self):
-        print("loading dashboard ...")
         layout = []
         children = []
         layout_str = self.db.select_latest_layout()
@@ -88,7 +88,6 @@ class App:
             df = self.vanna.run_sql(sql_query)
             fig = self.vanna.get_plotly_figure(plotly_code, df)
             chart = dcc.Graph(
-                id=id,
                 figure=fig,
                 style={
                     "marginBottom": "20px",
@@ -97,7 +96,7 @@ class App:
             children.append(
                 html.Div(
                     chart,
-                    key=id,
+                    id=id,
                     style={
                         "backgroundColor": "#333",
                         "padding": "10px",
@@ -140,10 +139,8 @@ class App:
                 query, sql, df_metadata=f"Running df.dtypes gives:\n {df.dtypes}"
             )
             id = str(self.db.insert_visualisation(query, sql, code))
-            print("id", id)
             fig = self.vanna.get_plotly_figure(code, df)
             chart = dcc.Graph(
-                id=id,
                 responsive=True,
                 figure=fig,
                 style={
@@ -153,7 +150,7 @@ class App:
             )
             new_child = html.Div(
                 chart,
-                key=id,
+                id=id,
                 style={
                     "height": "100%",
                     "width": "100%",
@@ -168,8 +165,8 @@ class App:
                 "i": id,
                 "x": len(current_layout) * 2 % 12,  # spread items across columns
                 "y": len(current_layout) // 6 * 4,  # new row every 6 items
-                "w": 6,
-                "h": 4,
+                "w": 3,
+                "h": 3,
             }
             updated_children = current_children + [new_child]
             updated_layout = current_layout + [new_layout_item]
