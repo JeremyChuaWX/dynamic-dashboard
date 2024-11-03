@@ -18,12 +18,12 @@ class App:
         self.vanna = vanna
         self.db = db
         self.app = dash.Dash(APP_NAME, external_stylesheets=EXTERNAL_STYLESHEETS)
-        self.layout()
+        self.app.layout = self.layout
         self.callbacks()
 
     def layout(self):
-        layout, children = self.load_dashboard()
-        self.app.layout = html.Div(
+        layout, children = self.initialize_dashboard()
+        return html.Div(
             style={
                 "display": "flex",
                 "flexDirection": "row",
@@ -58,14 +58,6 @@ class App:
                                 "width": "100%",
                             },
                         ),
-                        html.Button(
-                            "Save Layout",
-                            id="save-layout-button",
-                            style={
-                                "width": "100%",
-                                "marginTop": "10px",
-                            },
-                        ),
                         html.Div(id="output-text", style={"marginTop": "20px"}),
                     ],
                 ),
@@ -82,13 +74,13 @@ class App:
             ],
         )
 
-    def load_dashboard(self):
+    def initialize_dashboard(self):
         print("loading dashboard ...")
         layout = []
         children = []
         layout_str = self.db.select_latest_layout()
         if not layout_str:
-            return (layout, children)
+            return layout, children
         saved_layout = json.loads(layout_str)
         for id, pos in saved_layout.items():
             layout.append(pos)
@@ -112,38 +104,43 @@ class App:
                     },
                 )
             )
-        return (layout, children)
+        return layout, children
 
     def callbacks(self):
         @self.app.callback(
-            Input("save-layout-button", "n_clicks"),
+            Output("draggable-area", "layout", allow_duplicate=True),
             Input("draggable-area", "layout"),
-            State("draggable-area", "children"),
+            prevent_initial_call=True,
         )
-        def save_layout(n_clicks, layout, children):
-            if not n_clicks:
-                return dash.no_update
+        def save_layout(layout):
             map = {}
-            for position, child in zip(layout, children):
-                map[child["props"]["key"]] = position
+            for element in layout:
+                map[element["i"]] = element
             layout_str = json.dumps(map)
             self.db.insert_layout(layout_str)
+            return dash.no_update
 
         @self.app.callback(
-            Output("draggable-area", "children"),
+            [
+                Output("draggable-area", "children", allow_duplicate=True),
+                Output("draggable-area", "layout", allow_duplicate=True),
+            ],
             Input("submit-button", "n_clicks"),
             State("text-input", "value"),
             State("draggable-area", "children"),
+            State("draggable-area", "layout"),
+            prevent_initial_call=True,
         )
-        def add_visualisation(n_clicks, query, current_children):
+        def add_visualisation(n_clicks, query, current_children, current_layout):
             if not n_clicks or not query:
-                return current_children
+                return dash.no_update, dash.no_update
             sql = self.vanna.generate_sql(query)
             df = self.vanna.run_sql(sql)
             code = self.vanna.generate_plotly_code(
                 query, sql, df_metadata=f"Running df.dtypes gives:\n {df.dtypes}"
             )
             id = str(self.db.insert_visualisation(query, sql, code))
+            print("id", id)
             fig = self.vanna.get_plotly_figure(code, df)
             chart = dcc.Graph(
                 id=id,
@@ -154,22 +151,29 @@ class App:
                     "flex-grow": "1",
                 },
             )
-            current_children.append(
-                html.Div(
-                    chart,
-                    key=id,
-                    style={
-                        "height": "100%",
-                        "width": "100%",
-                        "display": "flex",
-                        "flex-direction": "column",
-                        "flex-grow": "0",
-                        "backgroundColor": "#333",
-                        "padding": "10px",
-                    },
-                )
+            new_child = html.Div(
+                chart,
+                key=id,
+                style={
+                    "height": "100%",
+                    "width": "100%",
+                    "display": "flex",
+                    "flex-direction": "column",
+                    "flex-grow": "0",
+                    "backgroundColor": "#333",
+                    "padding": "10px",
+                },
             )
-            return current_children
+            new_layout_item = {
+                "i": id,
+                "x": len(current_layout) * 2 % 12,  # spread items across columns
+                "y": len(current_layout) // 6 * 4,  # new row every 6 items
+                "w": 6,
+                "h": 4,
+            }
+            updated_children = current_children + [new_child]
+            updated_layout = current_layout + [new_layout_item]
+            return updated_children, updated_layout
 
     def start(self):
         self.app.run_server(host="0.0.0.0", port=Environment.PORT)
