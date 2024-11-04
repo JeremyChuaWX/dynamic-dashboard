@@ -13,6 +13,30 @@ APP_NAME = "Dynamic Dashboard"
 EXTERNAL_STYLESHEETS = ["./style.css"]
 
 
+def chart_component(id: str, fig):
+    chart = dcc.Graph(
+        responsive=True,
+        figure=fig,
+        style={
+            "min-height": "0",
+            "flex-grow": "1",
+        },
+    )
+    return html.Div(
+        chart,
+        id=id,
+        style={
+            "height": "100%",
+            "width": "100%",
+            "display": "flex",
+            "flex-direction": "column",
+            "flex-grow": "0",
+            "backgroundColor": "#333",
+            "padding": "10px",
+        },
+    )
+
+
 class App:
     def __init__(self, vanna: Vanna, db: Database) -> None:
         self.vanna = vanna
@@ -87,22 +111,8 @@ class App:
             _, question, sql_query, plotly_code = self.db.select_one_visualisation(id)
             df = self.vanna.run_sql(sql_query)
             fig = self.vanna.get_plotly_figure(plotly_code, df)
-            chart = dcc.Graph(
-                figure=fig,
-                style={
-                    "marginBottom": "20px",
-                },
-            )
-            children.append(
-                html.Div(
-                    chart,
-                    id=id,
-                    style={
-                        "backgroundColor": "#333",
-                        "padding": "10px",
-                    },
-                )
-            )
+            chart = chart_component(id, fig)
+            children.append(chart)
         return layout, children
 
     def callbacks(self):
@@ -133,6 +143,7 @@ class App:
         def add_visualisation(n_clicks, query, current_children, current_layout):
             if not n_clicks or not query:
                 return dash.no_update, dash.no_update
+
             sql = self.vanna.generate_sql(query)
             df = self.vanna.run_sql(sql)
             code = self.vanna.generate_plotly_code(
@@ -140,36 +151,31 @@ class App:
             )
             id = str(self.db.insert_visualisation(query, sql, code))
             fig = self.vanna.get_plotly_figure(code, df)
-            chart = dcc.Graph(
-                responsive=True,
-                figure=fig,
-                style={
-                    "min-height": "0",
-                    "flex-grow": "1",
-                },
-            )
-            new_child = html.Div(
-                chart,
-                id=id,
-                style={
-                    "height": "100%",
-                    "width": "100%",
-                    "display": "flex",
-                    "flex-direction": "column",
-                    "flex-grow": "0",
-                    "backgroundColor": "#333",
-                    "padding": "10px",
-                },
-            )
+            new_child = chart_component(id, fig)
+
+            new_x = 0
+            new_y = 0
+            for item in current_layout:
+                if new_y < item["y"] and new_x < item["x"]:
+                    new_x = item["x"]
+                    new_y = item["y"]
+            if new_x + 3 > 12:
+                new_x = 0
+                new_y = new_y + 3
+            else:
+                new_x = new_x + 3
+
             new_layout_item = {
                 "i": id,
-                "x": len(current_layout) * 2 % 12,  # spread items across columns
-                "y": len(current_layout) // 6 * 4,  # new row every 6 items
+                "x": new_x,
+                "y": new_y,
                 "w": 3,
                 "h": 3,
             }
+
             updated_children = current_children + [new_child]
             updated_layout = current_layout + [new_layout_item]
+
             return updated_children, updated_layout
 
     def start(self):
