@@ -13,30 +13,6 @@ APP_NAME = "Dynamic Dashboard"
 EXTERNAL_STYLESHEETS = ["./style.css"]
 
 
-def chart_component(id: str, fig):
-    chart = dcc.Graph(
-        responsive=True,
-        figure=fig,
-        style={
-            "min-height": "0",
-            "flex-grow": "1",
-        },
-    )
-    return html.Div(
-        chart,
-        id=id,
-        style={
-            "height": "100%",
-            "width": "100%",
-            "display": "flex",
-            "flex-direction": "column",
-            "flex-grow": "0",
-            "backgroundColor": "#333",
-            "padding": "10px",
-        },
-    )
-
-
 class App:
     def __init__(self, vanna: Vanna, db: Database) -> None:
         self.vanna = vanna
@@ -180,3 +156,27 @@ class App:
 
     def start(self):
         self.app.run_server(host="0.0.0.0", port=Environment.PORT)
+
+
+def chart_component(id: str, fig):
+    chart = dcc.Graph(
+        responsive=True,
+        figure=fig,
+        style={
+            "min-height": "0",
+            "flex-grow": "1",
+        },
+    )
+    return html.Div(
+        chart,
+        id=id,
+        style={
+            "height": "100%",
+            "width": "100%",
+            "display": "flex",
+            "flex-direction": "column",
+            "flex-grow": "0",
+            "backgroundColor": "#333",
+            "padding": "10px",
+        },
+    )
