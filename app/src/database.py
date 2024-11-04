@@ -125,6 +125,8 @@ class Database:
             visualisations
         WHERE 1=1
             AND id = :id
+        RETURNING
+            id
         ;
         """)
         with self.engine.begin() as connection:

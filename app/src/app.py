@@ -2,8 +2,7 @@ import json
 
 import dash
 import dash_draggable
-from dash import dcc, html
-from dash.dependencies import Input, Output, State
+from dash import ALL, Input, Output, State, ctx, dcc, html
 
 from database import Database
 from environment import Environment
@@ -131,15 +130,16 @@ class App:
 
             new_x = 0
             new_y = 0
-            for item in current_layout:
-                if new_y < item["y"] and new_x < item["x"]:
-                    new_x = item["x"]
-                    new_y = item["y"]
-            if new_x + 3 > 12:
-                new_x = 0
-                new_y = new_y + 3
-            else:
-                new_x = new_x + 3
+            if len(current_layout) > 0:
+                for item in current_layout:
+                    if new_y < item["y"] and new_x < item["x"]:
+                        new_x = item["x"]
+                        new_y = item["y"]
+                if new_x + 3 > 12:
+                    new_x = 0
+                    new_y = new_y + 3
+                else:
+                    new_x = new_x + 3
 
             new_layout_item = {
                 "i": id,
@@ -154,11 +154,51 @@ class App:
 
             return updated_children, updated_layout
 
+        @self.app.callback(
+            [
+                Output("draggable-area", "children", allow_duplicate=True),
+                Output("draggable-area", "layout", allow_duplicate=True),
+            ],
+            Input({"type": "delete-chart-button", "index": ALL}, "n_clicks"),
+            State("draggable-area", "children"),
+            State("draggable-area", "layout"),
+            prevent_initial_call=True,
+        )
+        def delete_chart(_, current_children, current_layout):
+            if not ctx.triggered_id or not ctx.triggered[0]["value"]:
+                return dash.no_update, dash.no_update
+
+            if ctx.triggered_id["type"] != "delete-chart-button":
+                return dash.no_update, dash.no_update
+
+            chart_id = ctx.triggered_id["index"]
+
+            self.db.delete_one_visualisation(chart_id)
+
+            updated_children = [
+                child for child in current_children if child["props"]["id"] != chart_id
+            ]
+            updated_layout = [
+                child for child in current_layout if child["i"] != chart_id
+            ]
+
+            return updated_children, updated_layout
+
     def start(self):
         self.app.run_server(host="0.0.0.0", port=Environment.PORT)
 
 
 def chart_component(id: str, fig):
+    button = html.Button(
+        "X",
+        id={
+            "type": "delete-chart-button",
+            "index": id,
+        },
+        style={
+            "width": "100%",
+        },
+    )
     chart = dcc.Graph(
         responsive=True,
         figure=fig,
@@ -168,7 +208,10 @@ def chart_component(id: str, fig):
         },
     )
     return html.Div(
-        chart,
+        children=[
+            button,
+            chart,
+        ],
         id=id,
         style={
             "height": "100%",
