@@ -1,6 +1,13 @@
 chromadb
 dash
 dash_draggable
+email-validator
+flask
+flask-bootstrap
+flask-login
+flask-migrate
+flask-sqlalchemy
+flask-wtf
 ollama
 pandas
 plotly

@@ -1,13 +1,15 @@
-from llm import Vanna
-from database import Database
 from app import App
+from database import Database
+from environment import Environment
+from llm import Vanna
+from server import server
 
 
 def main():
-    db = Database()
-    vn = Vanna(db)
-    app = App(vn, db)
-    app.start()
+    database = Database()
+    vanna = Vanna(database)
+    app = App(server, vanna, database)
+    server.run(host="0.0.0.0", port=Environment.PORT)
 
 
 if __name__ == "__main__":

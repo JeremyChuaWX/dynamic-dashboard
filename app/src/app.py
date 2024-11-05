@@ -8,15 +8,19 @@ from database import Database
 from environment import Environment
 from llm import Vanna
 
-APP_NAME = "Dynamic Dashboard"
 EXTERNAL_STYLESHEETS = ["./style.css"]
 
 
 class App:
-    def __init__(self, vanna: Vanna, db: Database) -> None:
+    def __init__(self, server, vanna: Vanna, db: Database) -> None:
         self.vanna = vanna
         self.db = db
-        self.app = dash.Dash(APP_NAME, external_stylesheets=EXTERNAL_STYLESHEETS)
+        self.app = dash.Dash(
+            server=server,
+            url_base_pathname="/dash/",
+            name=Environment.APP_NAME,
+            external_stylesheets=EXTERNAL_STYLESHEETS,
+        )
         self.app.layout = self.layout
         self.callbacks()
 
@@ -183,9 +187,6 @@ class App:
             ]
 
             return updated_children, updated_layout
-
-    def start(self):
-        self.app.run_server(host="0.0.0.0", port=Environment.PORT)
 
 
 def chart_component(id: str, fig):

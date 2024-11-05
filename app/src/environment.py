@@ -4,6 +4,7 @@ from typing import final
 
 @final
 class Environment:
+    APP_NAME = "Dynamic Dashboard"
     PORT = os.environ["PORT"]
     POSTGRES_HOST = os.environ["POSTGRES_HOST"]
     POSTGRES_DB = os.environ["POSTGRES_DB"]
