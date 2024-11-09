@@ -51,7 +51,7 @@ def process_file(filename: str, table_name: str):
             for col in timestamp_columns:
                 if col in chunk.columns:
                     chunk[col] = BASE_DATETIME + pd.to_timedelta(
-                        chunk[col].mask(chunk[col].isna()), unit="m"
+                        chunk[col].mask(chunk[col].isna()), unit="s"
                     )
 
             for col in boolean_columns:
